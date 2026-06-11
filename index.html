@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>라테일 계산기</title>
+<title>메모리얼 계산기 · 라테일</title>
 <meta name="theme-color" content="#0c0c0c">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230c0c0c'/><polygon points='16,4 27,10 27,22 16,28 5,22 5,10' fill='%231e3a8a'/><polygon points='16,4 27,10 16,13 5,10' fill='%233b82f6'/><polygon points='27,10 27,22 16,28 16,13' fill='%232563eb'/><polygon points='5,10 16,13 16,28 5,22' fill='%231d4ed8'/><polygon points='16,4 22,8 16,10 10,8' fill='%2393c5fd' opacity='.7'/><polygon points='16,13 20,16 16,24 12,16' fill='white' opacity='.07'/></svg>">
 <style>
@@ -73,7 +73,7 @@ h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
 #left-global { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 #global-list { overflow-y: auto; flex: 1; min-height: 0; }
 #page-memorial { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
-#page-artifact, #page-weight { flex: 1; overflow-y: auto; min-height: 0; }
+#page-artifact, #page-weight, #page-stats { flex: 1; overflow-y: auto; min-height: 0; }
 
 /* Panel tabs */
 .panel-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.25rem; }
@@ -191,6 +191,39 @@ select { background: var(--bg3); color: var(--txt); }
 .weight-section { margin-bottom: 2rem; }
 .weight-section-title { font-size: 11px; font-weight: 600; color: var(--txt3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
 
+/* Stats page */
+.stats-page { display: flex; gap: 1.75rem; align-items: flex-start; }
+.stats-col-in { width: 390px; flex-shrink: 0; }
+.stats-col-out { flex: 1; min-width: 0; }
+.srow { display: flex; align-items: center; gap: 6px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.srow:last-child { border-bottom: none; }
+.srow-lbl { flex: 1; color: var(--txt2); }
+.srow-unit { font-size: 10px; color: var(--txt3); width: 14px; text-align: center; flex-shrink: 0; }
+.pw-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--rad); padding: 10px 14px; }
+.pw-lbl { font-size: 10px; color: var(--txt3); margin-bottom: 3px; }
+.pw-val { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
+.pw-sub { font-size: 10px; color: var(--txt3); margin-top: 3px; }
+/* Game window panels */
+.tw-win { background: var(--bg2); border: 1px solid rgba(59,130,246,0.22); border-radius: var(--rad-lg); overflow: hidden; margin-bottom: 8px; }
+.tw-head { background: #101c36; padding: 7px 13px; font-size: 12px; font-weight: 600; color: #93c5fd; border-bottom: 1px solid rgba(59,130,246,0.25); display: flex; justify-content: space-between; align-items: center; }
+.tw-combat { background: rgba(59,130,246,0.1); border-bottom: 1px solid rgba(59,130,246,0.2); padding: 7px 13px; display: flex; justify-content: space-between; align-items: center; }
+.tw-combat-lbl { font-size: 11px; color: var(--blue-txt); }
+.tw-combat-val { font-size: 17px; font-weight: 700; color: #93c5fd; letter-spacing: -0.02em; }
+.tw-tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tw-tbl td { padding: 5px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.tw-tbl tr:last-child td { border-bottom: none; }
+.tw-lbl { color: var(--txt2); }
+.tw-val { text-align: center; white-space: nowrap; }
+.tw-val input.num-in { width: 68px; font-size: 11px; text-align: right; }
+.tw-val .unit { font-size: 10px; color: var(--txt3); margin-left: 2px; }
+.tw-sec-head td { background: rgba(59,130,246,0.06); color: var(--txt3); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; padding: 4px 12px; }
+.tw-col-head td { color: var(--blue-txt); font-size: 10px; font-weight: 600; text-align: center; padding: 4px 8px; background: rgba(59,130,246,0.04); border-bottom: 1px solid rgba(59,130,246,0.15); }
+.tw-hl td { background: rgba(239,68,68,0.04); }
+.tw-hl-bar { border-left: 2px solid rgba(239,68,68,0.5); }
+.tw-blue-row td { background: rgba(59,130,246,0.1); }
+.tw-blue-row .tw-val { color: var(--blue-txt); font-weight: 600; }
+.tw-notice { background: rgba(245,158,11,0.08); border-bottom: 1px solid rgba(245,158,11,0.2); padding: 6px 13px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--amber-txt); gap: 8px; }
+
 @media (max-width: 900px) {
   body { height: auto; overflow: auto; display: block; }
   .container { flex: none; overflow: visible; display: block; padding: 1.25rem 1rem; }
@@ -208,8 +241,27 @@ select { background: var(--bg3); color: var(--txt); }
   #left-global { flex: none; overflow: visible; }
   #global-list { overflow-y: visible; flex: none; }
   #page-memorial { flex: none; overflow: visible; }
-  #page-artifact, #page-weight { overflow-y: visible; flex: none; }
+  #page-artifact, #page-weight, #page-stats, #page-enchant { overflow-y: visible; flex: none; }
+  .stats-page { flex-direction: column; }
+  .stats-col-in { width: 100%; }
 }
+@keyframes neon-pulse {
+  0%,100% { box-shadow:0 0 4px var(--blue),0 0 10px var(--blue); border-color:var(--blue); }
+  50%      { box-shadow:0 0 8px var(--blue),0 0 20px var(--blue); border-color:var(--blue-txt); }
+}
+.neon-highlight { animation: neon-pulse 1s ease-in-out infinite; }
+#page-enchant { flex: 1; min-height: 0; overflow: visible; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 1.5rem; }
+/* Searchable select */
+.ss-wrap { position: relative; display: block; }
+.ss-drop { position: absolute; top: calc(100% + 2px); left: 0; right: 0; z-index: 300; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--rad); max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 4px 16px rgba(0,0,0,0.5); padding: 3px 0; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.25) transparent; }
+.ss-drop::-webkit-scrollbar { width: 4px; }
+.ss-drop::-webkit-scrollbar-track { background: transparent; }
+.ss-drop::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 4px; }
+.ss-drop::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.45); }
+.ss-drop.open { display: block; }
+.ss-item { padding: 5px 10px; font-size: 12px; cursor: pointer; color: var(--txt2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ss-item:hover { background: var(--bg4); color: var(--txt); }
+.ss-item.sel { background: var(--blue-bg); color: var(--blue-txt); }
 </style>
 </head>
 <body>
@@ -229,13 +281,148 @@ select { background: var(--bg3); color: var(--txt); }
   </div>
 
   <div class="page-nav">
-    <button class="page-tab on" onclick="setPageTab('memorial',this)">메모리얼</button>
-    <button class="page-tab" onclick="setPageTab('artifact',this)">성물석</button>
+    <button class="page-tab on" onclick="setPageTab('stats',this)">T창 정보</button>
     <button class="page-tab" onclick="setPageTab('weight',this)">환산치</button>
+    <button class="page-tab" onclick="setPageTab('enchant',this)">인챈트 비교</button>
+    <button class="page-tab" onclick="setPageTab('memorial',this)">메모리얼</button>
+    <button class="page-tab" onclick="setPageTab('artifact',this)">성물석</button>
+  </div>
+
+  <!-- ── T창 정보 페이지 ── -->
+  <div id="page-stats">
+    <div class="stats-page">
+
+      <!-- 좌측: 능력치 세부정보 (계산된 표시값) -->
+      <div class="tw-win" style="flex:1;min-width:0">
+        <div class="tw-head">능력치 세부정보</div>
+        <div class="tw-combat">
+          <span class="tw-combat-lbl">전투력</span>
+          <span class="tw-combat-val" id="sd-cp">—</span>
+        </div>
+        <table class="tw-tbl">
+          <tr><td class="tw-lbl">근력/마법력</td><td class="tw-val" id="sd-guma">—</td></tr>
+          <tr><td class="tw-lbl">무공/속성력</td><td class="tw-val" id="sd-muso">—</td></tr>
+          <!-- <tr><td class="tw-lbl">관통력</td><td class="tw-val" id="sd-pierce">—</td></tr> -->
+          <tr><td class="tw-lbl">크리티컬 확률</td><td class="tw-val" id="sd-critRate">—</td></tr>
+          <tr><td class="tw-lbl">크리티컬 대미지</td><td class="tw-val" id="sd-critDmg">—</td></tr>
+          <tr><td class="tw-lbl">최소 대미지</td><td class="tw-val" id="sd-minDmg">—</td></tr>
+          <tr><td class="tw-lbl">최대 대미지</td><td class="tw-val" id="sd-maxDmg">—</td></tr>
+          <tr><td class="tw-lbl">백어택 대미지</td><td class="tw-val" id="sd-baAtk">—</td></tr>
+          <tr><td class="tw-lbl">고정 대미지 증가</td><td class="tw-val" id="sd-fixDmg">—</td></tr>
+          <tr class="tw-sec-head"><td colspan="3"> </td></tr>
+          <tr class="tw-col-head"><td></td><td>일반</td><td>보스</td></tr>
+          <tr>
+            <td class="tw-lbl">몬스터 추가 대미지</td>
+            <td class="tw-val" id="sd-normAdd">—</td>
+            <td class="tw-val" id="sd-bossAdd">—</td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">몬스터 지배력</td>
+            <td class="tw-val"><input class="num-in" id="cs-normDom" type="number" min="0" max="100" step="0.1" placeholder="0" oninput="onStatChange('normDom',this.value)"><span class="unit">%</span></td>
+            <td class="tw-val"><input class="num-in" id="cs-bossDom" type="number" min="0" max="100" step="0.1" placeholder="0" oninput="onStatChange('bossDom',this.value)"><span class="unit">%</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 우측: 추가 세부정보 (입력) -->
+      <div class="tw-win" style="flex:1;min-width:0">
+        <div class="tw-head">
+          <span>추가 세부정보</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button id="ocr-mode-phys" class="lock-btn" style="font-size:10px;padding:2px 8px;background:var(--blue-bg);color:var(--blue-txt);border-color:var(--blue)" onclick="setOCRMode('phys')">물리</button>
+            <button id="ocr-mode-magic" class="lock-btn" style="font-size:10px;padding:2px 8px" onclick="setOCRMode('magic')">마법</button>
+            <input type="file" id="ocr-file-input" accept="image/*" style="display:none" onchange="processStatImage(this.files[0]);this.value=''">
+            <button class="lock-btn" id="ocr-btn" style="font-size:10px;padding:2px 8px;display:none" onclick="document.getElementById('ocr-file-input').click()">이미지로 입력</button>
+            <button class="lock-btn" style="font-size:10px;padding:2px 8px;color:var(--red-txt);border-color:rgba(239,68,68,0.3)" onclick="resetStats()">초기화</button>
+          </div>
+        </div>
+        <div class="tw-notice">
+          <span>⚠ 무기공격력(물리) % 에 숨겨진 +1% 보정치 존재</span>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap">
+            <input type="checkbox" id="muso-correction" onchange="renderStatsResult()"> 보정 적용
+          </label>
+        </div>
+        <table class="tw-tbl">
+          <tr class="tw-col-head">
+            <td></td>
+            <td>+수치</td>
+            <td>%</td>
+          </tr>
+          <tr class="tw-blue-row">
+            <td class="tw-lbl">직접 타격</td>
+            <td class="tw-val" colspan="2" id="sd-directAtk">—</td>
+          </tr>
+          <tr class="tw-blue-row">
+            <td class="tw-lbl">소환 타격</td>
+            <td class="tw-val" colspan="2" id="sd-summonAtk">—</td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">근력/마법력</td>
+            <td class="tw-val"><input class="num-in" id="cs-guma" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('guma',this.value)"></td>
+            <td class="tw-val"><input class="num-in" id="cs-gumaP" type="number" min="0" step="0.1" placeholder="0" oninput="onStatChange('gumaP',this.value)"><span class="unit">%</span></td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">무공/속성력</td>
+            <td class="tw-val"><input class="num-in" id="cs-muso" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('muso',this.value)"></td>
+            <td class="tw-val"><input class="num-in" id="cs-musoP" type="number" min="0" step="0.1" placeholder="0" oninput="onStatChange('musoP',this.value)"><span class="unit">%</span></td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">일반 몬스터 대미지</td>
+            <td class="tw-val"><input class="num-in" id="cs-normAddFlat" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('normAddFlat',this.value)"></td>
+            <td class="tw-val"><input class="num-in" id="cs-normAdd" type="number" min="0" step="0.1" placeholder="0" oninput="onStatChange('normAdd',this.value)"><span class="unit">%</span></td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">보스 몬스터 대미지</td>
+            <td class="tw-val"><input class="num-in" id="cs-bossAddFlat" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('bossAddFlat',this.value)"></td>
+            <td class="tw-val"><input class="num-in" id="cs-bossAdd" type="number" min="0" step="0.1" placeholder="0" oninput="onStatChange('bossAdd',this.value)"><span class="unit">%</span></td>
+          </tr>
+          <tr class="tw-sec-head"><td colspan="3"> </td></tr>
+          <tr>
+            <td class="tw-lbl">크리티컬 대미지</td>
+            <td class="tw-val"><input class="num-in" id="cs-critFlat" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('critFlat',this.value)"></td>
+            <td class="tw-val"><input class="num-in" id="cs-crit" type="number" min="0" step="0.1" placeholder="0" oninput="onStatChange('crit',this.value)"><span class="unit">%</span></td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">최소 대미지</td>
+            <td class="tw-val"><input class="num-in" id="cs-minDmgFlat" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('minDmgFlat',this.value)"></td>
+            <td class="tw-val"><input class="num-in" id="cs-minDmg" type="number" min="0" step="0.1" placeholder="0" oninput="onStatChange('minDmg',this.value)"><span class="unit">%</span></td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">최대 대미지</td>
+            <td class="tw-val"><input class="num-in" id="cs-maxDmgFlat" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('maxDmgFlat',this.value)"></td>
+            <td class="tw-val"><input class="num-in" id="cs-maxDmg" type="number" min="0" step="0.1" placeholder="0" oninput="onStatChange('maxDmg',this.value)"><span class="unit">%</span></td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">고정 대미지 증가</td>
+            <td class="tw-val"><input class="num-in" id="cs-fixDmg" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('fixDmg',this.value)"></td>
+            <td class="tw-val"><input class="num-in" id="cs-fixDmgP" type="number" min="0" step="0.1" placeholder="0" oninput="onStatChange('fixDmgP',this.value)"><span class="unit">%</span></td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">근마효율</td>
+            <td class="tw-val" style="color:var(--txt3);text-align:right">—</td>
+            <td class="tw-val"><input class="num-in" id="cs-gumaEff" type="number" min="0" max="300" step="0.1" placeholder="100" oninput="onStatChange('gumaEff',this.value)"><span class="unit">%</span></td>
+          </tr>
+          <tr class="tw-sec-head"><td colspan="3"> </td></tr>
+          <tr>
+            <td class="tw-lbl">근거리 대미지</td>
+            <td class="tw-val" colspan="2"><input class="num-in" id="cs-meleeDmg" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('meleeDmg',this.value)"></td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">상태이상 대미지</td>
+            <td class="tw-val" colspan="2"><input class="num-in" id="cs-statusDmg" type="number" min="0" step="1" placeholder="0" oninput="onStatChange('statusDmg',this.value)"></td>
+          </tr>
+          <tr>
+            <td class="tw-lbl">대미지 감소 (%)</td>
+            <td class="tw-val" colspan="2"><input class="num-in" id="cs-dmgReduce" type="number" min="0" step="0.1" placeholder="0" oninput="onStatChange('dmgReduce',this.value)"></td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
   </div>
 
   <!-- ── 메모리얼 페이지 ── -->
-  <div id="page-memorial">
+  <div id="page-memorial" style="display:none">
   <div class="layout">
 
     <!-- ── 좌측 패널: 전체 전략 + 환산치 ── -->
@@ -357,31 +544,110 @@ select { background: var(--bg3); color: var(--txt); }
 
 <!-- ── 환산치 페이지 ── -->
 <div id="page-weight" style="display:none">
-  <div style="max-width:800px">
-    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-      <button class="lock-btn" style="color:var(--red-txt);border-color:rgba(239,68,68,0.3)" onclick="resetWeights()">기본값 복원</button>
+  <div style="display:flex;gap:16px;align-items:flex-start;max-width:1100px">
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <button class="lock-btn" style="color:var(--red-txt);border-color:rgba(239,68,68,0.3)" onclick="resetWeights()">기본값 복원</button>
+      </div>
+      <div class="card">
+        <div class="st">전체 환산치 — 수치 1당 가중치</div>
+        <div id="wp-memorial-grid" class="opt-grid"></div>
+        <button class="lock-btn" style="margin-top:10px" onclick="W={...WD};saveAll();renderWeightPage()">기본값 초기화</button>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="st">기타 가중치 — 수치 1당 가중치</div>
+        <div id="wp-shared-grid" class="opt-grid"></div>
+        <button class="lock-btn" style="margin-top:10px" onclick="WD2={...WD2_DEFAULT};saveAll();renderWeightPage()">기본값 초기화</button>
+      </div>
     </div>
-    <div class="card">
-      <div class="st">메모리얼 환산치 — 수치 1당 가중치</div>
-      <div id="wp-memorial-grid" class="opt-grid"></div>
-      <button class="lock-btn" style="margin-top:10px" onclick="W={...WD};saveAll();renderWeightPage()">기본값 초기화</button>
-    </div>
-    <div class="card" style="margin-top:12px">
-      <div class="st">공용석 환산치 — 수치 1당 가중치</div>
-      <div id="wp-shared-grid" class="opt-grid"></div>
-      <button class="lock-btn" style="margin-top:10px" onclick="WD2={...WD2_DEFAULT};saveAll();renderWeightPage()">기본값 초기화</button>
+    <div style="width:240px;flex-shrink:0;margin-top:44px">
+      <div class="card">
+        <div style="font-size:14px;font-weight:700;color:var(--txt);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">T창 기준 환산치 계산</div>
+        <div style="display:grid;grid-template-columns:auto auto;align-items:center;gap:5px 8px;margin-bottom:10px">
+          <span style="font-size:11px;color:var(--txt3)">직타스킬계수</span>
+          <input class="num-in" id="wc-sk-direct" type="number" value="13000" style="width:100px">
+          <span style="font-size:11px;color:var(--txt3)">소환스킬계수</span>
+          <input class="num-in" id="wc-sk-summon" type="number" value="150" style="width:100px">
+          <span style="font-size:11px;color:var(--txt3)">소환무공계수</span>
+          <input class="num-in" id="wc-sk-ms" type="number" value="42" style="width:100px">
+          <span style="font-size:11px;color:var(--txt3)">직타:소환</span>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input class="num-in" id="wc-rd" type="number" value="6" min="0" max="10" style="width:44px">
+            <span style="color:var(--txt3);font-size:11px">:</span>
+            <input class="num-in" id="wc-rs" type="number" value="4" min="0" max="10" style="width:44px">
+          </div>
+          <span style="font-size:11px;color:var(--txt3)">보스:일반</span>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input class="num-in" id="wc-rb" type="number" value="5" min="0" max="10" style="width:44px">
+            <span style="color:var(--txt3);font-size:11px">:</span>
+            <input class="num-in" id="wc-rn" type="number" value="5" min="0" max="10" style="width:44px">
+          </div>
+        </div>
+        <button style="width:100%;margin-bottom:10px;padding:8px;border-radius:var(--rad);border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.07);color:var(--txt);font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.03em;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,0.13)'" onmouseout="this.style.background='rgba(255,255,255,0.07)'" onclick="calcAndRenderTchangWD()">계산</button>
+        <div id="wc-result"></div>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- ── 인챈트 비교 페이지 ── -->
+<div id="page-enchant" style="display:none">
+  <div style="display:flex;justify-content:flex-end;width:100%;max-width:760px;margin-bottom:8px">
+    <button class="lock-btn" style="color:var(--red-txt);border-color:rgba(239,68,68,0.3)" onclick="resetEC()">전체 초기화</button>
+  </div>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;max-width:760px;width:100%">
+    <div id="ec-panel-0" style="flex:1;min-width:280px;border-radius:var(--rad-lg);border:1px solid rgba(59,130,246,0.2);background:rgba(59,130,246,0.05);transition:background .25s,border .25s,box-shadow .25s">
+      <div style="padding:8px 12px 6px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:16px;font-weight:600;color:var(--txt)">기존 인챈트</span>
+          <button class="lock-btn" style="font-size:10px;padding:2px 8px" onclick="resetECPanel(0)">초기화</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:12px;color:var(--txt2)">환산치 :</span>
+          <span id="ec-score-0" style="font-size:18px;font-weight:700;letter-spacing:-0.02em">0.00</span>
+        </div>
+      </div>
+      <div style="overflow:visible">
+        <table class="tbl" style="table-layout:fixed">
+          <colgroup><col><col style="width:90px"></colgroup>
+          <thead><tr><th>옵션</th><th>수치</th></tr></thead>
+          <tbody id="ec-tbody-0"></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="ec-panel-1" style="flex:1;min-width:280px;border-radius:var(--rad-lg);border:1px solid rgba(59,130,246,0.2);background:rgba(59,130,246,0.05);transition:background .25s,border .25s,box-shadow .25s">
+      <div style="padding:8px 12px 6px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:16px;font-weight:600;color:var(--txt)">변경 인챈트</span>
+          <button class="lock-btn" style="font-size:10px;padding:2px 8px" onclick="resetECPanel(1)">초기화</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:12px;color:var(--txt2)">환산치 :</span>
+          <span id="ec-score-1" style="font-size:18px;font-weight:700;letter-spacing:-0.02em">0.00</span>
+        </div>
+      </div>
+      <div style="overflow:visible">
+        <table class="tbl" style="table-layout:fixed">
+          <colgroup><col><col style="width:90px"></colgroup>
+          <thead><tr><th>옵션</th><th>수치</th></tr></thead>
+          <tbody id="ec-tbody-1"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="ec-diff" style="margin-top:16px;width:100%;max-width:760px"></div>
+</div>
+
 <script>
 const WD = {
-  "크리티컬 대미지":1.0,"근력/마법력":0.0016,"근마%":4.0,"올스탯":0.002,"올스탯%":5.0,
+  "크리티컬 대미지":1.0,
+  "근력/마법력":0.0016,"근마%":4.0,"올스탯":0.002,"올스탯%":5.0,
   "무공/속성력":0.25,"무공/속성력%":6.0,"고정 대미지":0.001,"고정 대미지%":1.0,
   "최대 대미지":0.55,"최소 대미지":0.55,"최소+최대":1.1,"최종 최소 대미지":30.0,
-  "최종 최대 대미지":30.0,"최종 크리티컬 대미지":55.0,"보스 몬스터 지배력":20.0,
-  "일반 몬스터 지배력":20.0,"백어택":0.4,
-  "보스 몬스터 추가 대미지":0.0005,"일반 몬스터 추가 대미지":0.0005,"꽝":0
+  "최종 최대 대미지":30.0,"최종 크리티컬 대미지":55.0,
+  "보스 몬스터 추가 대미지":0.0005,"보스 추가 대미지%":0,"보스 몬스터 지배력":20.0,
+  "일반 몬스터 추가 대미지":0.0005,"일반 추가 대미지%":0,"일반 몬스터 지배력":20.0,
+  "백어택 대미지":0.4,"꽝":0
 };
 
 const MEM = [
@@ -398,7 +664,7 @@ const MEM = [
     {p:6,k:"최소 대미지",mn:1,mx:2},{p:5,k:"최소 대미지",mn:1,mx:4},{p:3.5,k:"최소 대미지",mn:2,mx:5},{p:1.5,k:"최소 대미지",mn:2,mx:8},{p:0.7,k:"최소 대미지",mn:4,mx:15},
     {p:6,k:"최대 대미지",mn:1,mx:2},{p:5,k:"최대 대미지",mn:1,mx:4},{p:3.5,k:"최대 대미지",mn:2,mx:5},{p:1.5,k:"최대 대미지",mn:2,mx:8},{p:0.7,k:"최대 대미지",mn:4,mx:15},
     {p:6,k:"크리티컬 대미지",mn:1,mx:2},{p:5,k:"크리티컬 대미지",mn:1,mx:4},{p:3.5,k:"크리티컬 대미지",mn:2,mx:5},{p:1.5,k:"크리티컬 대미지",mn:2,mx:8},{p:0.7,k:"크리티컬 대미지",mn:4,mx:15},
-    {p:6,k:"백어택",mn:1,mx:3},{p:5,k:"백어택",mn:2,mx:6},{p:3.5,k:"백어택",mn:3,mx:8},{p:1.5,k:"백어택",mn:4,mx:12},{p:0.7,k:"백어택",mn:7,mx:25}
+    {p:6,k:"백어택 대미지",mn:1,mx:3},{p:5,k:"백어택 대미지",mn:2,mx:6},{p:3.5,k:"백어택 대미지",mn:3,mx:8},{p:1.5,k:"백어택 대미지",mn:4,mx:12},{p:0.7,k:"백어택 대미지",mn:7,mx:25}
   ]},
   {name:"레비 (세트)",type:"세트",cp:20,cc:3,opts:[
     {p:5.1335,k:"고정 대미지%",mn:1,mx:1},{p:2.5667,k:"고정 대미지%",mn:2,mx:4},{p:0.8214,k:"고정 대미지%",mn:3,mx:8},
@@ -445,7 +711,7 @@ const MEM = [
     {p:6,k:"최소 대미지",mn:1,mx:3},{p:5,k:"최소 대미지",mn:1,mx:6},{p:3.5,k:"최소 대미지",mn:2,mx:7},{p:1.5,k:"최소 대미지",mn:2,mx:12},{p:0.7,k:"최소 대미지",mn:4,mx:22},
     {p:6,k:"최대 대미지",mn:1,mx:3},{p:5,k:"최대 대미지",mn:1,mx:6},{p:3.5,k:"최대 대미지",mn:2,mx:7},{p:1.5,k:"최대 대미지",mn:2,mx:12},{p:0.7,k:"최대 대미지",mn:4,mx:22},
     {p:6,k:"크리티컬 대미지",mn:1,mx:3},{p:5,k:"크리티컬 대미지",mn:1,mx:6},{p:3.5,k:"크리티컬 대미지",mn:2,mx:7},{p:1.5,k:"크리티컬 대미지",mn:2,mx:12},{p:0.7,k:"크리티컬 대미지",mn:4,mx:22},
-    {p:6,k:"백어택",mn:1,mx:4},{p:5,k:"백어택",mn:2,mx:9},{p:3.5,k:"백어택",mn:3,mx:12},{p:1.5,k:"백어택",mn:4,mx:18},{p:0.7,k:"백어택",mn:7,mx:37}
+    {p:6,k:"백어택 대미지",mn:1,mx:4},{p:5,k:"백어택 대미지",mn:2,mx:9},{p:3.5,k:"백어택 대미지",mn:3,mx:12},{p:1.5,k:"백어택 대미지",mn:4,mx:18},{p:0.7,k:"백어택 대미지",mn:7,mx:37}
   ]},
   {name:"초엔팜 (세트)",type:"세트",cp:40,cc:3,opts:[
     {p:5.1335,k:"고정 대미지%",mn:1,mx:1},{p:2.5667,k:"고정 대미지%",mn:2,mx:6},{p:0.8214,k:"고정 대미지%",mn:3,mx:12},
@@ -472,11 +738,16 @@ const SET_SP = [{s:1,p:.3},{s:2,p:.3},{s:3,p:.3},{s:4,p:.1}];
 const SK = 'latale_memorial_v4';
 
 const WD2_DEFAULT = {
-  "올스탯":0.002,"근력/마법력":0.0016,"무공/속성력":0.25,
-  "백어택 대미지":0.3,"고정 대미지":0.001,
-  "보스 몬스터 추가 대미지":0.0005,"일반 몬스터 추가 대미지":0.0005,
-  "체력":0,"최대 HP":0,"명중률":0
+  "체력":0,"최대 HP":0,"HP%":0,"명중률":0,
+  "근거리 대미지":0,"상태이상 대미지":0,"대미지 감소(%)":0
 };
+const ART_OPTS = [
+  "올스탯","근력/마법력","무공/속성력",
+  "백어택 대미지","고정 대미지",
+  "보스 몬스터 추가 대미지","일반 몬스터 추가 대미지",
+  "체력","최대 HP","HP%","명중률",
+  "근거리 대미지","상태이상 대미지","대미지 감소(%)"
+];
 const WD2_MAX = {
   "올스탯":2400,"근력/마법력":3000,"무공/속성력":20,
   "백어택 대미지":20,"고정 대미지":5000,
@@ -510,23 +781,56 @@ let ART_NEW = initArtNew();
 let artDungeonMin = 10;
 let artStartIdx = 0;
 
+// 테스트 데이터 (주석 처리)
+/*const CHAR_STATS_DEFAULT = {
+  guma:997448,   gumaP:488,
+  muso:11470,    musoP:407,
+   normAddFlat:714900, normAdd:14,
+   bossAddFlat:728155, bossAdd:13,
+   normDom:56.4, bossDom:62.0,
+   critFlat:5482,  crit:44,
+   minDmgFlat:4745, minDmg:41,
+  maxDmgFlat:6033, maxDmg:39,
+   fixDmg:396717,  fixDmgP:87,
+   gumaEff:25,
+  meleeDmg:100, statusDmg:0, dmgReduce:67
+ };*/
+const CHAR_STATS_DEFAULT = {
+  guma:0,     gumaP:0,
+  muso:0,     musoP:0,
+  normAddFlat:0, normAdd:0,
+  bossAddFlat:0, bossAdd:0,
+  normDom:0,  bossDom:0,
+  critFlat:0, crit:0,
+  minDmgFlat:0, minDmg:0,
+  maxDmgFlat:0, maxDmg:0,
+  fixDmg:0,   fixDmgP:0,
+  gumaEff:0,
+  meleeDmg:0, statusDmg:0, dmgReduce:0
+};
+let CHAR_STATS = {...CHAR_STATS_DEFAULT};
+
 let W = {...WD};
 let SD = {};
 let MI = 0;
+let EC = [
+  Array.from({length:5}, () => ({opt:'',val:''})),
+  Array.from({length:5}, () => ({opt:'',val:''}))
+];
 let curTab = 'slots';
 let leftTab = 'global';
-let curPageTab = 'memorial';
+let curPageTab = 'stats';
 
 function saveAll() {
   try {
-    localStorage.setItem(SK, JSON.stringify({W, WD2, SD, MI, ART_SD, ART_NEW, artDungeonMin, artStartIdx}));
+    localStorage.setItem(SK, JSON.stringify({W, WD2, SD, MI, ART_SD, ART_NEW, artDungeonMin, artStartIdx, CHAR_STATS, EC}));
   } catch(e) {
   }
   if (leftTab === 'global' && document.getElementById('global-list')) requestAnimationFrame(() => renderGlobalStrategy());
 }
 function saveState() {
   try {
-    localStorage.setItem(SK, JSON.stringify({W, WD2, SD, MI, ART_SD, ART_NEW, artDungeonMin, artStartIdx}));
+    localStorage.setItem(SK, JSON.stringify({W, WD2, SD, MI, ART_SD, ART_NEW, artDungeonMin, artStartIdx, CHAR_STATS, EC}));
   } catch(e) {
   }
 }
@@ -536,13 +840,22 @@ function loadAll() {
     if (raw) {
       const d = JSON.parse(raw);
       if (d.W) W = {...WD, ...d.W};
-      if (d.WD2) WD2 = {...WD2_DEFAULT, ...d.WD2};
+      if (d.WD2) { WD2 = {...WD2_DEFAULT}; for (const k of Object.keys(WD2_DEFAULT)) { if (d.WD2[k] !== undefined) WD2[k] = d.WD2[k]; } }
       if (d.SD) SD = d.SD;
       if (typeof d.MI === 'number') MI = d.MI;
       if (d.ART_SD) ART_SD = d.ART_SD;
       if (d.ART_NEW) ART_NEW = d.ART_NEW;
       if (typeof d.artDungeonMin === 'number') artDungeonMin = d.artDungeonMin;
       if (typeof d.artStartIdx === 'number') artStartIdx = d.artStartIdx;
+      if (d.CHAR_STATS) CHAR_STATS = {...CHAR_STATS_DEFAULT, ...d.CHAR_STATS};
+      if (d.EC && Array.isArray(d.EC) && d.EC.length === 2) {
+        EC = d.EC.map(panel => {
+          const rows = Array.isArray(panel) ? panel : [];
+          const filled = rows.map(r => ({opt: r?.opt||'', val: r?.val||''}));
+          while (filled.length < 5) filled.push({opt:'',val:''});
+          return filled.slice(0, 5);
+        });
+      }
     }
   } catch(e) {}
 }
@@ -725,14 +1038,18 @@ function resetAllData() {
   MI = 0;
   ART_SD = initArtSD();
   ART_NEW = initArtNew();
+  CHAR_STATS = {...CHAR_STATS_DEFAULT};
+  EC = [Array.from({length:5},()=>({opt:'',val:''})),Array.from({length:5},()=>({opt:'',val:''}))];
   saveAll();
   renderAll();
   renderGlobalStrategy();
   if (curPageTab === 'artifact') renderArtGrid();
+  else if (curPageTab === 'stats') renderStatsPage();
+  else if (curPageTab === 'enchant') renderEnchantPage();
 }
 
 function exportJSON() {
-  const blob = new Blob([JSON.stringify({W, WD2, SD, MI, ART_SD, ART_NEW, artDungeonMin, artStartIdx}, null, 2)], {type:'application/json'});
+  const blob = new Blob([JSON.stringify({W, WD2, SD, MI, ART_SD, ART_NEW, artDungeonMin, artStartIdx, CHAR_STATS, EC}, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'memorial_data.json';
@@ -754,10 +1071,21 @@ function importJSON(file) {
       if (d.ART_NEW) ART_NEW = d.ART_NEW;
       if (typeof d.artDungeonMin === 'number') artDungeonMin = d.artDungeonMin;
       if (typeof d.artStartIdx === 'number') artStartIdx = d.artStartIdx;
+      if (d.CHAR_STATS) CHAR_STATS = {...CHAR_STATS_DEFAULT, ...d.CHAR_STATS};
+      if (d.EC && Array.isArray(d.EC) && d.EC.length === 2) {
+        EC = d.EC.map(panel => {
+          const rows = Array.isArray(panel) ? panel : [];
+          const filled = rows.map(r => ({opt: r?.opt||'', val: r?.val||''}));
+          while (filled.length < 5) filled.push({opt:'',val:''});
+          return filled.slice(0, 5);
+        });
+      }
       saveAll();
       renderAll();
       if (curPageTab === 'artifact') renderArtPage();
       else if (curPageTab === 'weight') renderWeightPage();
+      else if (curPageTab === 'stats') renderStatsPage();
+      else if (curPageTab === 'enchant') renderEnchantPage();
       else if (leftTab === 'global') renderGlobalStrategy();
     } catch(err) { alert('파일 형식이 올바르지 않습니다.'); }
   };
@@ -1008,6 +1336,306 @@ function renderWeightPage() {
 function renderWeights() { renderWeightPage(); }
 function resetWeights() { W={...WD}; WD2={...WD2_DEFAULT}; saveAll(); renderWeightPage(); }
 
+// ── 인챈트 비교 ──
+function getEnchantOptList() {
+  const wdKeys = Object.keys(WD).filter(k => k !== '꽝');
+  const wd2Keys = Object.keys(WD2_DEFAULT).filter(k => !wdKeys.includes(k));
+  return ['', ...wdKeys, ...wd2Keys];
+}
+
+function calcEnchantScore(pi) {
+  return EC[pi].reduce((s, row) => {
+    if (!row.opt) return s;
+    const w = W[row.opt] ?? WD2[row.opt] ?? 0;
+    return s + (parseFloat(row.val) || 0) * w;
+  }, 0);
+}
+
+function updateECScores() {
+  const s0 = calcEnchantScore(0), s1 = calcEnchantScore(1);
+  const el0 = document.getElementById('ec-score-0');
+  const el1 = document.getElementById('ec-score-1');
+  if (el0) { el0.textContent = s0.toFixed(2); el0.style.color = s0 > s1 ? 'var(--green-txt)' : s0 < s1 ? 'var(--red-txt)' : ''; }
+  if (el1) { el1.textContent = s1.toFixed(2); el1.style.color = s1 > s0 ? 'var(--green-txt)' : s1 < s0 ? 'var(--red-txt)' : ''; }
+  const hasInput = pi => EC[pi].some(r => r.opt !== '' && r.val !== '');
+  const p0 = document.getElementById('ec-panel-0');
+  const p1 = document.getElementById('ec-panel-1');
+  const stylePanel = (el, rank) => {
+    if (!el) return;
+    if (rank === 1) {
+      el.style.border     = '2px solid #22c55e';
+      el.style.background = 'rgba(34,197,94,0.07)';
+      el.style.boxShadow  = '0 0 14px rgba(34,197,94,0.35)';
+    } else if (rank === 2) {
+      el.style.border     = '2px solid #ef4444';
+      el.style.background = 'rgba(239,68,68,0.07)';
+      el.style.boxShadow  = '0 0 8px rgba(239,68,68,0.25)';
+    } else {
+      el.style.border     = '1px solid rgba(59,130,246,0.2)';
+      el.style.background = 'rgba(59,130,246,0.05)';
+      el.style.boxShadow  = '';
+    }
+  };
+  const bothFilled = hasInput(0) && hasInput(1);
+  if (!bothFilled || s0 === s1) { stylePanel(p0, 0); stylePanel(p1, 0); }
+  else if (s0 > s1)             { stylePanel(p0, 1); stylePanel(p1, 2); }
+  else                          { stylePanel(p0, 2); stylePanel(p1, 1); }
+  const diff = document.getElementById('ec-diff');
+  if (!diff) return;
+  if (!bothFilled) { diff.innerHTML = ''; return; }
+  const delta = s0 - s1;
+  const absDelta = Math.abs(delta).toFixed(2);
+  let html = '';
+  const loserScore = delta >= 0 ? s1 : s0;
+  const pct = loserScore > 0 ? (Math.abs(delta) / loserScore * 100).toFixed(1) : null;
+  const winColor = delta > 0 ? 'var(--green-txt)' : delta < 0 ? 'var(--red-txt)' : 'var(--txt2)';
+  if (delta === 0) {
+    html = `<div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rad);font-size:13px;color:var(--txt2)">
+      <span>환산치 <strong>0</strong> 차이</span>
+      ${pct !== null ? `<span style="color:var(--txt3)">·</span><span>실 성능 <strong>0%</strong> 차이</span>` : ''}
+    </div>`;
+  } else {
+    const sign = delta > 0 ? '+' : '−';
+    html = `<div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rad);font-size:13px;flex-wrap:wrap">
+      <span style="color:var(--txt2)">환산치 <strong style="color:${winColor};font-size:15px">${sign}${absDelta}</strong> 차이</span>
+      ${pct !== null ? `<span style="color:var(--txt3)">·</span><span style="color:var(--txt2)">실 성능 <strong style="color:${winColor};font-size:15px">${sign}${pct}%</strong> 차이</span>` : ''}
+    </div>`;
+  }
+  diff.innerHTML = html;
+}
+
+function openSSDrop(pi, ri) {
+  document.querySelectorAll('.ss-drop').forEach(d => d.classList.remove('open'));
+  const drop = document.getElementById(`ss-drop-${pi}-${ri}`);
+  if (!drop) return;
+  drop.querySelectorAll('.ss-item').forEach(item => item.style.display = '');
+  drop.classList.add('open');
+  const sel = drop.querySelector('.ss-item.sel');
+  if (sel) sel.scrollIntoView({block:'nearest'});
+}
+
+function filterSSDrop(pi, ri, q) {
+  const ql = q.toLowerCase();
+  const drop = document.getElementById(`ss-drop-${pi}-${ri}`);
+  if (!drop) return;
+  drop.querySelectorAll('.ss-item').forEach(item => {
+    const txt = (item.dataset.val || '').toLowerCase();
+    item.style.display = (!ql || txt.includes(ql)) ? '' : 'none';
+  });
+  drop.classList.add('open');
+}
+
+function selectSSItem(pi, ri, val) {
+  EC[pi][ri].opt = val;
+  const inp = document.getElementById(`ss-inp-${pi}-${ri}`);
+  const drop = document.getElementById(`ss-drop-${pi}-${ri}`);
+  if (inp) inp.value = val;
+  if (drop) {
+    drop.querySelectorAll('.ss-item').forEach(it => it.classList.toggle('sel', it.dataset.val === val));
+    drop.classList.remove('open');
+  }
+  saveState();
+  updateECScores();
+}
+
+function blurSSDrop(pi, ri) {
+  setTimeout(() => {
+    const drop = document.getElementById(`ss-drop-${pi}-${ri}`);
+    if (drop) drop.classList.remove('open');
+    const inp = document.getElementById(`ss-inp-${pi}-${ri}`);
+    if (inp) inp.value = EC[pi][ri].opt;
+  }, 150);
+}
+
+function renderEnchantPanel(pi) {
+  const tbody = document.getElementById('ec-tbody-' + pi);
+  if (!tbody) return;
+  const opts = getEnchantOptList();
+  tbody.innerHTML = EC[pi].map((row, ri) => {
+    const items = opts.map(k => {
+      const lbl = k === '' ? '(없음)' : k;
+      return `<div class="ss-item${row.opt===k?' sel':''}" data-val="${k}" onmousedown="event.preventDefault();selectSSItem(${pi},${ri},'${k}')">${lbl}</div>`;
+    }).join('');
+    return `<tr>
+      <td style="padding:4px 6px;position:relative">
+        <div class="ss-wrap">
+          <input class="sel-opt" id="ss-inp-${pi}-${ri}" autocomplete="off" placeholder="옵션 검색..."
+            value="${row.opt}"
+            onfocus="openSSDrop(${pi},${ri})"
+            oninput="filterSSDrop(${pi},${ri},this.value)"
+            onblur="blurSSDrop(${pi},${ri})"
+            style="width:100%">
+          <div class="ss-drop" id="ss-drop-${pi}-${ri}">${items}</div>
+        </div>
+      </td>
+      <td style="padding:4px 6px">
+        <input class="num-in" type="number" value="${row.val}"
+          oninput="EC[${pi}][${ri}].val=this.value;saveState();updateECScores()">
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function renderEnchantPage() {
+  renderEnchantPanel(0);
+  renderEnchantPanel(1);
+  updateECScores();
+}
+
+function resetECPanel(pi) {
+  EC[pi] = Array.from({length:5}, () => ({opt:'',val:''}));
+  saveState();
+  renderEnchantPanel(pi);
+  updateECScores();
+}
+
+function resetEC() {
+  EC = [
+    Array.from({length:5}, () => ({opt:'',val:''})),
+    Array.from({length:5}, () => ({opt:'',val:''}))
+  ];
+  saveState();
+  renderEnchantPage();
+}
+
+function computeDamageForWC(s, SK_d, SK_s, SK_ms, r_d, r_s, r_b, r_n) {
+  const musoCorr = document.getElementById('muso-correction')?.checked ? 1.01 : 1;
+  const guma_sd = s.guma * (1 + s.gumaP / 100);
+  const muso_sd = s.muso * (1 + s.musoP / 100) * musoCorr;
+  const fixDmg_sd = s.fixDmg * (1 + s.fixDmgP / 100);
+  const min_sd = s.minDmgFlat * (1 + s.minDmg / 100);
+  const max_sd = s.maxDmgFlat * (1 + s.maxDmg / 100);
+  const eff_min = Math.min(min_sd, max_sd);
+  const crit_sd = s.critFlat * (1 + s.crit / 100);
+  const normAdd_sd = s.normAddFlat * (1 + s.normAdd / 100);
+  const bossAdd_sd = s.bossAddFlat * (1 + s.bossAdd / 100);
+  const R = 1.0 + (eff_min + max_sd) * 0.005;
+  const C = 1 + crit_sd * 0.01;
+  const M_b = 1 + s.bossDom * 0.01;
+  const M_n = 1 + s.normDom * 0.01;
+  const B_d_b = muso_sd * (1 + SK_d * 0.01) * 2 + guma_sd * (1 + s.gumaEff / 100) + fixDmg_sd + bossAdd_sd;
+  const B_d_n = muso_sd * (1 + SK_d * 0.01) * 2 + guma_sd * (1 + s.gumaEff / 100) + fixDmg_sd + normAdd_sd;
+  const B_s_b = guma_sd * (SK_s * 0.01) + muso_sd * SK_ms + fixDmg_sd + bossAdd_sd;
+  const B_s_n = guma_sd * (SK_s * 0.01) + muso_sd * SK_ms + fixDmg_sd + normAdd_sd;
+  return r_d * (r_b * B_d_b * R * C * M_b + r_n * B_d_n * R * C * M_n)
+       + r_s * (r_b * B_s_b * R * C * M_b + r_n * B_s_n * R * C * M_n);
+}
+
+function calcAndRenderTchangWD() {
+  const SK_d  = parseFloat(document.getElementById('wc-sk-direct').value) || 13000;
+  const SK_s  = parseFloat(document.getElementById('wc-sk-summon').value) || 150;
+  const SK_ms = parseFloat(document.getElementById('wc-sk-ms').value) || 42;
+  const gn = (id, def) => { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? def : v; };
+  const rd = gn('wc-rd', 6), rs = gn('wc-rs', 4);
+  const rb = gn('wc-rb', 5), rn = gn('wc-rn', 5);
+  const r_d = rd / (rd + rs), r_s = rs / (rd + rs);
+  const r_b = rb / (rb + rn), r_n = rn / (rb + rn);
+  const args = [SK_d, SK_s, SK_ms, r_d, r_s, r_b, r_n];
+  const d0 = computeDamageForWC(CHAR_STATS, ...args);
+  if (d0 <= 0) {
+    document.getElementById('wc-result').innerHTML = '<div style="font-size:11px;color:var(--txt3)">T창 정보 탭에 스탯을 먼저 입력하세요</div>';
+    return;
+  }
+  const statKeys = ['guma','gumaP','muso','musoP','fixDmg','fixDmgP',
+    'normAddFlat','normAdd','bossAddFlat','bossAdd',
+    'critFlat','crit','minDmgFlat','minDmg','maxDmgFlat','maxDmg','bossDom','normDom'];
+  const deltas = {};
+  for (const key of statKeys) {
+    const s1 = {...CHAR_STATS, [key]: CHAR_STATS[key] + 1};
+    deltas[key] = computeDamageForWC(s1, ...args) - d0;
+  }
+  const ref = deltas.critFlat;
+  if (ref <= 0) {
+    document.getElementById('wc-result').innerHTML = '<div style="font-size:11px;color:var(--txt3)">크리티컬 대미지 스탯을 입력하세요</div>';
+    return;
+  }
+  const r = k => parseFloat((deltas[k] / ref).toFixed(4));
+  // ── 메모리얼 환산치 업데이트 ──
+  const WD_MAP = {
+    'guma':        '근력/마법력',
+    'gumaP':       '근마%',
+    'muso':        '무공/속성력',
+    'musoP':       '무공/속성력%',
+    'fixDmg':      '고정 대미지',
+    'fixDmgP':     '고정 대미지%',
+    'normAddFlat': '일반 몬스터 추가 대미지',
+    'normAdd':     '일반 추가 대미지%',
+    'bossAddFlat': '보스 몬스터 추가 대미지',
+    'bossAdd':     '보스 추가 대미지%',
+    'critFlat':    '크리티컬 대미지',
+    'crit':        '최종 크리티컬 대미지',
+    'minDmgFlat':  '최소 대미지',
+    'minDmg':      '최종 최소 대미지',
+    'maxDmgFlat':  '최대 대미지',
+    'maxDmg':      '최종 최대 대미지',
+    'bossDom':     '보스 몬스터 지배력',
+    'normDom':     '일반 몬스터 지배력',
+  };
+  const updatedW = new Set();
+  for (const [sk, wk] of Object.entries(WD_MAP)) {
+    if (W[wk] !== undefined) { W[wk] = r(sk); updatedW.add(wk); }
+  }
+  if (W['올스탯']    !== undefined) { W['올스탯']    = parseFloat((r('guma')       * 1.25).toFixed(4)); updatedW.add('올스탯'); }
+  if (W['올스탯%']   !== undefined) { W['올스탯%']   = parseFloat((r('gumaP')      * 1.25).toFixed(4)); updatedW.add('올스탯%'); }
+  if (W['최소+최대'] !== undefined) { W['최소+최대'] = parseFloat((r('minDmgFlat') + r('maxDmgFlat')).toFixed(4)); updatedW.add('최소+최대'); }
+  saveAll();
+  renderWeightPage();
+  const grid = document.getElementById('wp-memorial-grid');
+  if (grid) {
+    grid.querySelectorAll('.opt-item').forEach(item => {
+      const lbl = item.querySelector('label');
+      if (lbl && updatedW.has(lbl.textContent.trim())) {
+        const inp = item.querySelector('input');
+        if (inp) { inp.classList.add('neon-highlight'); setTimeout(() => inp.classList.remove('neon-highlight'), 5000); }
+      }
+    });
+  }
+  const el = document.getElementById('wc-result');
+  el.innerHTML = `<div style="font-size:11px;color:var(--blue-txt)">${updatedW.size}개 항목 업데이트됨</div>`;
+  setTimeout(() => { el.innerHTML = ''; }, 3000);
+}
+
+// ── T창 정보 ──
+function onStatChange(key, val) {
+  CHAR_STATS[key] = parseFloat(val) || 0;
+  saveAll();
+  renderStatsResult();
+}
+
+function resetStats() {
+  CHAR_STATS = {...CHAR_STATS_DEFAULT};
+  saveAll();
+  renderStatsPage();
+}
+
+function renderStatsPage() {
+  Object.keys(CHAR_STATS_DEFAULT).forEach(k => {
+    const el = document.getElementById('cs-' + k);
+    if (!el) return;
+    const v = CHAR_STATS[k];
+    el.value = (v !== 0 && v !== undefined) ? v : '';
+  });
+  renderStatsResult();
+}
+
+function renderStatsResult() {
+  const s = CHAR_STATS;
+  const fmt = v => Math.round(v).toLocaleString('ko-KR');
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  // flat × (1 + %/100) — flat이 0이면 '—' 표시
+  const calc = (flat, pct) => flat > 0 ? fmt(flat * (1 + pct / 100)) : '—';
+
+  const musoCorrection = document.getElementById('muso-correction')?.checked ? 1.01 : 1;
+  set('sd-guma',    calc(s.guma,         s.gumaP));
+  set('sd-muso',    s.muso > 0 ? fmt(s.muso * (1 + s.musoP / 100) * musoCorrection) : '—');
+  set('sd-critDmg', calc(s.critFlat,     s.crit));
+  set('sd-minDmg',  calc(s.minDmgFlat,   s.minDmg));
+  set('sd-maxDmg',  calc(s.maxDmgFlat,   s.maxDmg));
+  set('sd-fixDmg',  calc(s.fixDmg,       s.fixDmgP));
+  set('sd-normAdd', calc(s.normAddFlat,  s.normAdd));
+  set('sd-bossAdd', calc(s.bossAddFlat,  s.bossAdd));
+}
+
 // ── 전체 환산치 합산 ──
 function renderGlobalSummary() {
   let total = 0, filled = 0;
@@ -1164,7 +1792,7 @@ function renderAll() {
 // ── 페이지 탭 전환 ──
 function setPageTab(t, el) {
   curPageTab = t;
-  ['memorial','artifact','weight'].forEach(id => {
+  ['stats','memorial','artifact','weight','enchant'].forEach(id => {
     const p = document.getElementById('page-' + id);
     if (p) p.style.display = id === t ? '' : 'none';
   });
@@ -1173,10 +1801,12 @@ function setPageTab(t, el) {
   document.querySelector('.container').style.maxWidth = t === 'artifact' ? '1600px' : '';
   if (t === 'artifact') renderArtPage();
   else if (t === 'weight') renderWeightPage();
+  else if (t === 'stats') renderStatsPage();
+  else if (t === 'enchant') renderEnchantPage();
 }
 
 // ── 성물석 계산 ──
-function gw2(k) { return WD2[k] ?? 0; }
+function gw2(k) { return WD2[k] ?? W[k] ?? 0; }
 
 function getArtWeight(ai, optKey) {
   const w = gw2(optKey);
@@ -1247,7 +1877,7 @@ function renderArtGrid() {
   const T = artDungeonMin * 60;
   const usage = calcArtUsage(T, artStartIdx);
   const ranking = computeRanking();
-  const keys = Object.keys(WD2_DEFAULT);
+  const keys = ART_OPTS;
   const r1 = ranking[0] ?? null;
   const r2 = ranking[1] ?? null;
   const hasNew = ART_NEW.some(ov => ov.opt && parseFloat(ov.val||0) > 0);
@@ -1411,11 +2041,252 @@ function renderArtPage() {
   renderArtGrid();
 }
 
+// ── T창 OCR ──
+let ocrMode = 'phys';
+
+function setOCRMode(mode) {
+  ocrMode = mode;
+  const bp = document.getElementById('ocr-mode-phys');
+  const bm = document.getElementById('ocr-mode-magic');
+  if (!bp || !bm) return;
+  [bp, bm].forEach(b => { b.style.background=''; b.style.color=''; b.style.borderColor=''; });
+  const on = mode === 'phys' ? bp : bm;
+  on.style.background = 'var(--blue-bg)';
+  on.style.color = 'var(--blue-txt)';
+  on.style.borderColor = 'var(--blue)';
+  const cb = document.getElementById('muso-correction');
+  if (cb) { cb.checked = (mode === 'phys'); renderStatsResult(); }
+}
+
+async function loadTesseract() {
+  if (typeof Tesseract !== 'undefined') return;
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+// 전처리 후 픽셀 밀도로 패널 경계 X 탐색
+// 어두운 배경 반전 후: 텍스트=어둠, 배경=흰색 → 두 패널 사이 빈 열이 가장 밀도 낮음
+function findBoundaryX(px, width, height) {
+  const density = new Float32Array(width);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (px[(y * width + x) * 4] < 128) density[x]++;
+    }
+  }
+  // 10열 이동평균 스무딩
+  const sm = new Float32Array(width);
+  for (let x = 0; x < width; x++) {
+    let s = 0, c = 0;
+    for (let dx = -5; dx <= 5; dx++) {
+      if (x+dx >= 0 && x+dx < width) { s += density[x+dx]; c++; }
+    }
+    sm[x] = s / c;
+  }
+  // 이미지 중앙 30~70% 구간에서 밀도 최소 열 = 패널 사이 gap
+  const lo = Math.floor(width * 0.30), hi = Math.floor(width * 0.70);
+  let minVal = Infinity, minX = Math.floor(width * 0.5);
+  for (let x = lo; x <= hi; x++) {
+    if (sm[x] < minVal) { minVal = sm[x]; minX = x; }
+  }
+  return minX;
+}
+
+function preprocessForOCR(file) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const scale = 2;
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale; canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const d = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const px = d.data;
+      let sum = 0;
+      for (let i = 0; i < px.length; i += 4) sum += (px[i] + px[i+1] + px[i+2]) / 3;
+      const dark = (sum / (px.length / 4)) < 128;
+      for (let i = 0; i < px.length; i += 4) {
+        let g = px[i] * 0.299 + px[i+1] * 0.587 + px[i+2] * 0.114;
+        if (dark) g = 255 - g;
+        px[i] = px[i+1] = px[i+2] = g;
+      }
+      // 경계 탐색은 전처리된 픽셀 기준
+      const boundaryX = findBoundaryX(px, canvas.width, canvas.height);
+      ctx.putImageData(d, 0, 0);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(blob => resolve({ blob, boundaryX }), 'image/png');
+    };
+    img.src = url;
+  });
+}
+
+// 단어 bounding box로 패널별 라인 재구성
+function buildLines(words, xMin, xMax) {
+  const filtered = words.filter(w => w.bbox && w.text && w.text.trim() && w.bbox.x0 >= xMin && w.bbox.x0 < xMax);
+  const buckets = [];
+  for (const w of filtered) {
+    const cy = (w.bbox.y0 + w.bbox.y1) / 2;
+    let b = buckets.find(b => Math.abs(b.cy - cy) < 20);
+    if (!b) { b = { cy, words: [] }; buckets.push(b); }
+    b.words.push(w);
+  }
+  buckets.sort((a, b) => a.cy - b.cy);
+  return buckets.map(b => b.words.sort((a, b) => a.bbox.x0 - b.bbox.x0).map(w => w.text).join(' '));
+}
+
+async function processStatImage(file) {
+  if (!file) return;
+  const btn = document.getElementById('ocr-btn');
+  btn.textContent = '로딩…'; btn.disabled = true;
+  try {
+    await loadTesseract();
+    btn.textContent = '전처리…';
+    const { blob, boundaryX } = await preprocessForOCR(file);
+    btn.textContent = '인식 중…';
+    const result = await Tesseract.recognize(blob, 'kor+eng', {
+      logger: m => { if (m.status === 'recognizing text') btn.textContent = Math.round(m.progress * 100) + '%'; }
+    });
+    const words = result.data.words || [];
+    const rightLines = buildLines(words, boundaryX, Infinity);
+    const leftLines  = buildLines(words, 0, boundaryX);
+    const filled = parseOCRText(rightLines, leftLines, ocrMode);
+    btn.textContent = filled > 0 ? filled + '개 입력됨' : '인식 실패';
+    if (filled > 0) { saveAll(); renderStatsPage(); }
+  } catch(e) {
+    alert('OCR 오류: ' + e.message);
+  }
+  setTimeout(() => { btn.textContent = '이미지로 입력'; btn.disabled = false; }, 2500);
+}
+
+function extractStatNums(text, allowDecimal = false) {
+  // 괄호 제거, 소수점 불허 시 digit.digit → digit+digit (OCR이 쉼표를 점으로 오독한 경우)
+  let t = text.replace(/[()]/g, ' ');
+  if (!allowDecimal) t = t.replace(/(\d)\.(\d)/g, '$1$2');
+  const flat = [], pct = [];
+  const re = /\+?(\d[\d,]*(?:\.\d+)?)\s*(%)?/g;
+  let m;
+  while ((m = re.exec(t)) !== null) {
+    const v = parseFloat(m[1].replace(/,/g, ''));
+    if (!isNaN(v) && v > 0) (m[2] ? pct : flat).push(v);
+  }
+  return { flat, pct };
+}
+
+function setOCRField(key, val) {
+  const v = parseFloat(String(val).replace(/,/g, ''));
+  if (isNaN(v) || v < 0) return 0;
+  CHAR_STATS[key] = v;
+  return 1;
+}
+
+function parseOCRText(rightLines, leftLines, mode) {
+  let filled = 0;
+  const isPhys = mode !== 'magic';
+
+  // ── 몬스터 지배력: 좌측 패널(능력치 세부정보)에서만 읽음 — 소수, % 없음
+  for (let i = 0; i < leftLines.length; i++) {
+    if (leftLines[i].includes('지배력')) {
+      const { flat: df } = extractStatNums(leftLines.slice(i, i+4).join(' '), true);
+      if (df.length >= 2) { filled += setOCRField('normDom', df[0]); filled += setOCRField('bossDom', df[1]); }
+      else if (df.length === 1) filled += setOCRField('normDom', df[0]);
+      break;
+    }
+  }
+
+  // ── 우측 패널(추가 세부정보) 스탯 파싱
+  for (let i = 0; i < rightLines.length; i++) {
+    const line = rightLines[i];
+    const ctx = [line, rightLines[i+1] || ''].join(' ');
+    const { flat, pct } = extractStatNums(ctx);
+
+    // 근력/마법력 → guma
+    if (isPhys && line.includes('근력') && !line.includes('마법력') && !line.includes('효율')) {
+      if (flat.length) filled += setOCRField('guma', flat[0]);
+      if (pct.length)  filled += setOCRField('gumaP', pct[0]);
+    }
+    if (!isPhys && line.includes('마법력') && !line.includes('효율')) {
+      if (flat.length) filled += setOCRField('guma', flat[0]);
+      if (pct.length)  filled += setOCRField('gumaP', pct[0]);
+    }
+
+    // 무기/속성력 → muso
+    if (isPhys && line.includes('무기공격력')) {
+      const maxVal = flat.length >= 2 ? Math.max(flat[0], flat[1]) : flat[0];
+      if (maxVal !== undefined) filled += setOCRField('muso', maxVal);
+      if (pct.length) filled += setOCRField('musoP', pct[0]);
+    }
+    if (!isPhys && line.includes('속성력') && !line.includes('무기')) {
+      if (flat.length) filled += setOCRField('muso', flat[0]);
+      if (pct.length)  filled += setOCRField('musoP', pct[0]);
+    }
+
+    // 공통 단일 스탯
+    if (/일반.{0,4}몬스터.{0,6}대미지/.test(line) && !/보스/.test(line)) {
+      if (flat.length) filled += setOCRField('normAddFlat', flat[0]);
+      if (pct.length)  filled += setOCRField('normAdd', pct[0]);
+    }
+    if (/보스.{0,4}몬스터.{0,6}대미지/.test(line)) {
+      if (flat.length) filled += setOCRField('bossAddFlat', flat[0]);
+      if (pct.length)  filled += setOCRField('bossAdd', pct[0]);
+    }
+    if (/근거리.{0,4}대미지/.test(line)) {
+      if (flat.length) filled += setOCRField('meleeDmg', flat[0]);
+    }
+    if (line.includes('상태이상')) {
+      if (flat.length) filled += setOCRField('statusDmg', flat[0]);
+    }
+    if (/대미지.{0,4}감소/.test(line)) {
+      const v = flat.length ? flat[0] : pct.length ? pct[0] : null;
+      if (v !== null) filled += setOCRField('dmgReduce', v);
+    }
+
+    // 물리/마법 이중 컬럼 스탯 (물리: idx=0, 마법: idx=1)
+    const idx = isPhys ? 0 : 1;
+    const pick = (arr) => arr.length > idx ? arr[idx] : arr[0];
+
+    if (/크리티컬.{0,4}대미지/.test(line)) {
+      if (flat.length) filled += setOCRField('critFlat', pick(flat));
+      if (pct.length)  filled += setOCRField('crit',     pick(pct));
+    }
+    if (/최소.{0,4}대미지/.test(line)) {
+      if (flat.length) filled += setOCRField('minDmgFlat', pick(flat));
+      if (pct.length)  filled += setOCRField('minDmg',     pick(pct));
+    }
+    if (/최대.{0,4}대미지/.test(line)) {
+      if (flat.length) filled += setOCRField('maxDmgFlat', pick(flat));
+      if (pct.length)  filled += setOCRField('maxDmg',     pick(pct));
+    }
+    if (/고정.{0,4}대미지/.test(line)) {
+      if (flat.length) filled += setOCRField('fixDmg',  pick(flat));
+      if (pct.length)  filled += setOCRField('fixDmgP', pick(pct));
+    }
+    if (/효율/.test(line)) {
+      if (pct.length)  filled += setOCRField('gumaEff', pick(pct));
+    }
+  }
+  return filled;
+}
+
 function init() {
   loadAll();
   renderAll();
+  renderStatsPage();
   renderGlobalStrategy();
+  setOCRMode('phys');
 }
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ss-wrap')) {
+    document.querySelectorAll('.ss-drop').forEach(d => d.classList.remove('open'));
+  }
+});
+
 init();
 </script>
 </body>
